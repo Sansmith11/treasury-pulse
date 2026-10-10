@@ -23,6 +23,8 @@ import {
   MOCK_CASHFLOWS 
 } from './mockData';
 
+const API_BASE = import.meta.env.VITE_API_BASE_URL || '';
+
 export default function App() {
   const [selectedRegion, setSelectedRegion] = useState('ALL');
   const [selectedEntity, setSelectedEntity] = useState('BNPPARIBAS_PARIS');
@@ -82,7 +84,7 @@ export default function App() {
 
   const fetchHierarchy = async () => {
     try {
-      const res = await fetch('/api/hierarchy');
+      const res = await fetch(`${API_BASE}/api/hierarchy`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setHierarchy(data);
@@ -97,7 +99,7 @@ export default function App() {
       if (selectedEntity) params.append('entity', selectedEntity);
       else if (selectedRegion !== 'ALL') params.append('region', selectedRegion);
 
-      const res = await fetch(`/api/metrics?${params.toString()}`);
+      const res = await fetch(`${API_BASE}/api/metrics?${params.toString()}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setMetrics(data);
@@ -108,7 +110,7 @@ export default function App() {
 
   const fetchAlerts = async () => {
     try {
-      const res = await fetch('/api/alerts');
+      const res = await fetch(`${API_BASE}/api/alerts`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setAlertsData(data);
@@ -120,7 +122,7 @@ export default function App() {
   const fetchSurplus = async () => {
     try {
       const regParam = selectedRegion !== 'ALL' ? `?region=${selectedRegion}` : '';
-      const res = await fetch(`/api/surplus${regParam}`);
+      const res = await fetch(`${API_BASE}/api/surplus${regParam}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setSurplusData(data);
@@ -132,7 +134,7 @@ export default function App() {
   const fetchForecast = async () => {
     try {
       const ent = selectedEntity || 'BNPPARIBAS_PARIS';
-      const res = await fetch(`/api/forecast?entity=${ent}`);
+      const res = await fetch(`${API_BASE}/api/forecast?entity=${ent}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setForecastData(data);
@@ -147,7 +149,7 @@ export default function App() {
       if (selectedEntity) params.append('entity', selectedEntity);
       else if (selectedRegion !== 'ALL') params.append('region', selectedRegion);
 
-      const res = await fetch(`/api/cashflows/recent?${params.toString()}`);
+      const res = await fetch(`${API_BASE}/api/cashflows/recent?${params.toString()}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setCashflows(data);
@@ -158,7 +160,7 @@ export default function App() {
 
   const fetchCurrencyBreakdown = async () => {
     try {
-      const res = await fetch('/api/currency-breakdown');
+      const res = await fetch(`${API_BASE}/api/currency-breakdown`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setCurrencyBreakdown(data);
@@ -170,7 +172,7 @@ export default function App() {
   const fetchTrendData = async () => {
     try {
       const regParam = selectedRegion !== 'ALL' ? `?region=${selectedRegion}` : '';
-      const res = await fetch(`/api/trend-table${regParam}`);
+      const res = await fetch(`${API_BASE}/api/trend-table${regParam}`);
       if (!res.ok) throw new Error();
       const data = await res.json();
       setTrendData(data);
