@@ -1,0 +1,9 @@
+{
+  "name": "treasury-pulse",
+  "version": "1.0.0",
+  "private": true,
+  "description": "BNP Paribas — Treasury Pulse: Short-term Liquidity Manager",
+  "scripts": {
+    "build": "node build.js"
+  }
+}
