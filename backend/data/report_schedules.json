@@ -1,0 +1,13 @@
+{
+  "sod_enabled": true,
+  "sod_time": "08:00",
+  "eod_enabled": true,
+  "eod_time": "18:00",
+  "recipients": [
+    "treasury-ops@bnpparibas.com",
+    "chief.treasurer@bnpparibas.com",
+    "liquidity.analysts@bnpparibas.com"
+  ],
+  "last_sod_run": null,
+  "last_eod_run": null
+}
