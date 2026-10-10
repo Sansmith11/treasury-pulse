@@ -12,6 +12,7 @@ import ReportCenter from './components/ReportCenter';
 import TransactionsTableModal from './components/TransactionsTableModal';
 import BenchmarkModal from './components/BenchmarkModal';
 import AICopilotChat from './components/AICopilotChat';
+import GoogleAuthModal from './components/GoogleAuthModal';
 
 import { 
   MOCK_HIERARCHY, 
@@ -27,7 +28,25 @@ export default function App() {
   const [selectedEntity, setSelectedEntity] = useState('BNPPARIBAS_PARIS');
   const [userRole, setUserRole] = useState('Admin'); // Admin, Treasury Manager, Analyst
 
+  // Google Authentication State
+  const [googleUser, setGoogleUser] = useState(() => {
+    try {
+      const saved = localStorage.getItem('treasury_pulse_user');
+      return saved ? JSON.parse(saved) : {
+        name: "Jean-Pierre Laurent",
+        email: "jean.laurent@bnpparibas-group.com",
+        role: "Admin",
+        picture: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=faces",
+        verified: true,
+        auth_provider: "Google"
+      };
+    } catch (e) {
+      return null;
+    }
+  });
+
   // Modals state
+  const [isGoogleAuthOpen, setIsGoogleAuthOpen] = useState(false);
   const [isAlertsOpen, setIsAlertsOpen] = useState(false);
   const [isReportsOpen, setIsReportsOpen] = useState(false);
   const [isWhatIfOpen, setIsWhatIfOpen] = useState(false);
@@ -160,6 +179,19 @@ export default function App() {
     }
   };
 
+  const handleGoogleLoginSuccess = (user) => {
+    setGoogleUser(user);
+    if (user.role) {
+      setUserRole(user.role);
+    }
+    localStorage.setItem('treasury_pulse_user', JSON.stringify(user));
+  };
+
+  const handleSignOut = () => {
+    setGoogleUser(null);
+    localStorage.removeItem('treasury_pulse_user');
+  };
+
   const activeAlerts = alertsData?.active_alerts || [];
   const activeBreachCount = activeAlerts.filter(a => a.severity === 'red' || a.severity === 'orange').length;
 
@@ -182,6 +214,9 @@ export default function App() {
         onOpenBenchmark={() => setIsBenchmarkOpen(true)}
         onToggleAICopilot={() => setIsAICopilotOpen(prev => !prev)}
         isAICopilotOpen={isAICopilotOpen}
+        googleUser={googleUser}
+        onOpenGoogleAuth={() => setIsGoogleAuthOpen(true)}
+        onSignOut={handleSignOut}
       />
 
       {/* Main Container */}
@@ -228,6 +263,12 @@ export default function App() {
       </main>
 
       {/* Modals & AI Drawer */}
+      <GoogleAuthModal
+        isOpen={isGoogleAuthOpen}
+        onClose={() => setIsGoogleAuthOpen(false)}
+        onLoginSuccess={handleGoogleLoginSuccess}
+      />
+
       <WhatIfSimulator
         entity={selectedEntity || 'BNPPARIBAS_PARIS'}
         isOpen={isWhatIfOpen}
